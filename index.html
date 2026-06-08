@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mObywatel - Dowód Osobisty</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; }
+    .eagle { filter: brightness(0) invert(1); }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <div class="max-w-md mx-auto bg-white min-h-screen shadow-xl overflow-hidden">
+
+    <!-- Nagłówek -->
+    <div class="bg-[#0033A0] text-white p-4 flex items-center gap-3">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Orzeł_biały.svg" width="45" class="eagle" alt="Godło">
+      <div>
+        <h1 class="text-xl font-bold">mObywatel</h1>
+        <p class="text-xs opacity-90">Aplikacja mobilna</p>
+      </div>
+    </div>
+
+    <div class="p-6">
+      <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Dowód Osobisty</h2>
+
+      <!-- Dane osobowe -->
+      <div class="space-y-4 mb-8">
+        <div>
+          <label class="block text-sm text-gray-600">Imię</label>
+          <input id="imie" value="Jan" class="w-full border rounded-lg px-4 py-3 text-lg">
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600">Nazwisko</label>
+          <input id="nazwisko" value="Kowalski" class="w-full border rounded-lg px-4 py-3 text-lg">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm text-gray-600">PESEL</label>
+            <input id="pesel" value="85031212345" class="w-full border rounded-lg px-4 py-3">
+          </div>
+          <div>
+            <label class="block text-sm text-gray-600">Data urodzenia</label>
+            <input id="data" value="12.03.1985" class="w-full border rounded-lg px-4 py-3">
+          </div>
+        </div>
+      </div>
+
+      <!-- Przycisk generowania -->
+      <button onclick="generujQR()" 
+              class="w-full bg-[#0033A0] hover:bg-blue-800 text-white font-bold py-4 rounded-xl text-lg transition">
+        🔄 Wygeneruj kod QR
+      </button>
+
+      <!-- Miejsce na QR -->
+      <div class="mt-8 flex flex-col items-center">
+        <div id="qrcode" class="p-4 bg-white border-2 border-gray-300 rounded-2xl"></div>
+        
+        <div id="kod-cyfrowy" class="mt-6 text-center">
+          <p class="text-sm text-gray-500">Kod jednorazowy</p>
+          <p id="kod" class="text-4xl font-mono font-bold tracking-widest text-[#0033A0]">874392</p>
+        </div>
+      </div>
+
+      <div class="mt-10 text-center text-xs text-gray-500">
+        Dokument ważny do: 12.03.2035<br>
+        Wydany przez: Urząd Gminy Warszawa
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function generujQR() {
+      const imie = document.getElementById('imie').value;
+      const nazwisko = document.getElementById('nazwisko').value;
+      const pesel = document.getElementById('pesel').value;
+      const data = document.getElementById('data').value;
+
+      const dane = `mObywatel\n${imie} ${nazwisko}\nPESEL: ${pesel}\nData ur.: ${data}`;
+
+      // Czyść poprzedni QR
+      document.getElementById('qrcode').innerHTML = '';
+
+      // Generuj nowy QR
+      new QRCode(document.getElementById('qrcode'), {
+        text: dane,
+        width: 280,
+        height: 280,
+        colorDark: "#0033A0",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      // Losowy kod 6-cyfrowy
+      const losowyKod = Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('kod').textContent = losowyKod;
+    }
+
+    // Generuj od razu przy załadowaniu strony
+    window.onload = generujQR;
+  </script>
+
+</body>
+</html>
